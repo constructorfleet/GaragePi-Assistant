@@ -1,0 +1,30 @@
+COMMAND_OPEN = 'open'
+COMMAND_CLOSE = 'close'
+
+CONF_DATA_INTERFACE = 'data_interface'
+CONF_OPEN_GARAGE_PIN = 'open_garage_pin'
+CONF_CLOSE_GARAGE_PIN = 'close_garage_pin'
+CONF_POSITIONS = 'positions'
+CONF_POSITION_OPEN_PIN = 'open_pin'
+CONF_POSITION_CLOSE_PIN = 'close_pin'
+CONF_POSITION_PINS = 'position_pins'
+CONF_PIN = 'pin'
+
+DATA_INTERFACE_MQTT = 'mqtt'
+DATA_INTERFACE_HASS = 'hass'
+
+POSITION_CLOSED = 'closed'
+POSITION_OPEN = 'open'
+
+ENTITY_ID = 'entity_id'
+SERVICE = 'service'
+SERVICE_DATA = 'service_data'
+SERVICE_OPEN = 'cover.open_cover'
+SERVICE_CLOSE = 'cover.close_cover'
+STATE = 'state'
+CURRENT_POSITION = 'current_position'
+
+TEMPLATE_ENTITY_ID = '$ENTITY_ID'
+TEMPLATE_SERVICE = '$SERVICE'
+TEMPLATE_STATE = '$STATE'
+TEMPLATE_ATTR_CURRENT_POSITION = '$CURRENT_POSITION'
