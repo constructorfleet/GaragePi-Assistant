@@ -17,7 +17,7 @@ class CommandListener(abc):
 
 
 @abc
-class DataInterface(abc):
+class Api(abc):
     """Abstract remote data interface."""
 
     _is_connected = False

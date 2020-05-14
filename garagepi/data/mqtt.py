@@ -8,7 +8,7 @@ import voluptuous as vol
 from garagepi.common.async_utils import run_in_executor
 from garagepi.common.validation import valid_subscribe_topic, valid_publish_topic, \
     valid_state_template
-from garagepi.data import DataInterface
+from garagepi.data import Api
 
 CONF_BROKER_URL = 'broker_url'
 CONF_BROKER_PORT = 'broker_port'
@@ -69,7 +69,7 @@ MQTT_CONFIGURATION_SCHEMA = vol.Schema({
 })
 
 
-class MqttDataInterface(DataInterface):
+class MqttApi(Api):
     """Interface with MQTT broker."""
     _client = None
     _first_connection = True

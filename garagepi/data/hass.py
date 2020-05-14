@@ -9,7 +9,7 @@ import websocket
 
 from garagepi.common.async_utils import run_in_executor, create_task
 from garagepi.common.validation import entity_id
-from garagepi.data import DataInterface
+from garagepi.data import Api
 
 CONF_CERT_VERIFY = 'cert_verify'
 CONF_ENTITY_ID = 'entity_id'
@@ -26,7 +26,7 @@ HASS_CONFIGURATION_SCHEMA = vol.Schema({
 })
 
 
-class HassDataInterface(DataInterface):
+class HassApi(Api):
     """Interface with Home-Assistant instance."""
     _ws_client = None
     _id = 0
