@@ -3,21 +3,11 @@ import abc
 import logging
 
 from garagepi.common.const import SERVICE, SERVICE_DATA, ENTITY_ID, SERVICE_OPEN, SERVICE_CLOSE, \
-    COMMAND_OPEN, COMMAND_CLOSE
+    COMMAND_OPEN, COMMAND_CLOSE, CONF_ENTITY_ID
 from garagepi.common.validation import VALID_COMMANDS
-from garagepi.data.hass import CONF_ENTITY_ID
 
 
-@abc
-class CommandListener(abc):
-    """Abstract listener for commands to process."""
-
-    def on_command(self, command):
-        pass
-
-
-@abc
-class Api(abc):
+class Api(abc.ABC):
     """Abstract remote data interface."""
 
     _is_connected = False
@@ -28,7 +18,7 @@ class Api(abc):
         self.config = self._validate_configuration(configuration)
         self._command_listener = command_listener
 
-    @abc
+    @abc.abstractmethod
     def _initialize(self):
         pass
 
@@ -58,3 +48,10 @@ class Api(abc):
         if command not in VALID_COMMANDS:
             raise ValueError('Invalid command received')
         self._command_listener.on_command(command)
+
+
+class CommandListener(abc.ABC):
+    """Abstract listener for commands to process."""
+
+    def on_command(self, command):
+        pass

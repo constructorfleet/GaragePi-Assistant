@@ -3,7 +3,7 @@ import re
 import voluptuous as vol
 
 from garagepi.common.const import DATA_INTERFACE_HASS, DATA_INTERFACE_MQTT, COMMAND_OPEN, \
-    COMMAND_CLOSE, TEMPLATE_ENTITY_ID, TEMPLATE_SERVICE, TEMPLATE_STATE
+    COMMAND_CLOSE, TEMPLATE_STATE
 
 FLOAT_PATTERN = re.compile(r'[+-]?([0-9]*[.])?[0-9]+')
 
@@ -16,6 +16,55 @@ VALID_COMMANDS = vol.Any(
     COMMAND_OPEN,
     COMMAND_CLOSE
 )
+
+VALID_GPIO_PINS = vol.In([
+        2,
+        3,
+        4,
+        17,
+        27,
+        22,
+        10,
+        11,
+        5,
+        6,
+        13,
+        19,
+        26,
+        18,
+        23,
+        24,
+        25,
+        8,
+        7,
+        12,
+        16,
+        20,
+        21
+    ])
+
+
+def keys_with_schema(
+    key_schema,
+    value_schema
+):
+    """Ensure all keys follow schema."""
+
+    schema = vol.Schema({int: value_schema})
+
+    def verify(value):
+        """Validate all keys pass value_schema."""
+        if not isinstance(value, dict):
+            raise vol.Invalid("expected dictionary")
+
+        result = {}
+        for key, value in value.items():
+            valid_key = key_schema(value)
+            result[valid_key] = value
+
+        return schema(result)
+
+    return verify
 
 
 def is_valid_entity_id(value):
@@ -71,7 +120,7 @@ def valid_subscribe_topic(value):
     value = valid_topic(value)
     for i in (i for i, c in enumerate(value) if c == "+"):
         if (i > 0 and value[i - 1] != "/") or (
-            i < len(value) - 1 and value[i + 1] != "/"
+                i < len(value) - 1 and value[i + 1] != "/"
         ):
             raise vol.Invalid(
                 "Single-level wildcard must occupy an entire level of the filter"
@@ -106,40 +155,23 @@ def valid_state_template(value):
     return TEMPLATE_STATE in value
 
 
+def constant_value(value):
+    """No matter the input, return the value."""
+    def constant(input_value):
+        return value
+
+    return constant
+
+
 class ValidateGPIOPin:
     """Validates a GPIO pin in the configuration."""
     _used_pins = set()
-    _valid_gpio_pins = vol.In([
-        2,
-        3,
-        4,
-        17,
-        27,
-        22,
-        10,
-        11,
-        5,
-        6,
-        13,
-        19,
-        26,
-        18,
-        23,
-        24,
-        25,
-        8,
-        7,
-        12,
-        16,
-        20,
-        21
-    ])
 
     def __call__(self, value):
         int_value = vol.Coerce(int)(value)
-        self._valid_gpio_pins(int_value)
+        VALID_GPIO_PINS(int_value)
         if int_value in self._used_pins:
-            raise vol.Invalid("GPIO pin %d is already used elsewhere.", int_value)
+            raise vol.Invalid("GPIO pin {} is already used elsewhere.".format(str(int_value)))
 
         self._used_pins.add(int_value)
         return int_value
@@ -154,5 +186,5 @@ class ValidateNumericPosition:
             float(str(value)[-1]) if isinstance(value, str) else value)
         int_value = vol.Coerce(int)(float_value * 10 if float_value < 1.0 else float_value)
         if int_value in self._used_positions:
-            raise vol.Invalid("Position %s is already used elsewhere", str(value))
+            raise vol.Invalid("Position {} is already used elsewhere".format(str(value)))
         return int_value

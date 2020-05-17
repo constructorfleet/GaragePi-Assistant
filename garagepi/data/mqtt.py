@@ -6,8 +6,9 @@ import paho.mqtt.client as mqtt
 import voluptuous as vol
 
 from garagepi.common.async_utils import run_in_executor
+from garagepi.common.const import DATA_INTERFACE_MQTT, CONF_NAME
 from garagepi.common.validation import valid_subscribe_topic, valid_publish_topic, \
-    valid_state_template
+    valid_state_template, constant_value
 from garagepi.data import Api
 
 CONF_BROKER_URL = 'broker_url'
@@ -58,14 +59,15 @@ MQTT_CONFIGURATION_SCHEMA = vol.Schema({
     vol.Optional(CONF_PASSWORD): str,
     vol.Required(CONF_COMMAND_TOPIC): valid_subscribe_topic,
     vol.Required(CONF_STATE_TOPIC): valid_publish_topic,
-    vol.Optional(CONF_STATE_PAYLOAD_TEMPLATE, default=DEFAULT_STATE_TEMPLATE): valid_state_template,
+    vol.Optional(CONF_STATE_PAYLOAD_TEMPLATE): valid_state_template,
     vol.Optional(CONF_QOS, default=0): vol.All(
         vol.Coerce(int),
         vol.Range(0, 2)
     ),
     vol.Optional(CONF_RETAIN, default=False): vol.Coerce(bool),
     vol.Optional(CONF_LAST_WILL): BIRTH_WILL_SCHEMA,
-    vol.Optional(CONF_BIRTH): BIRTH_WILL_SCHEMA
+    vol.Optional(CONF_BIRTH): BIRTH_WILL_SCHEMA,
+    vol.Optional(CONF_NAME, default=DATA_INTERFACE_MQTT): constant_value(DATA_INTERFACE_MQTT)
 })
 
 
@@ -78,6 +80,8 @@ class MqttApi(Api):
         self._client = mqtt.Client(
             client_id=self.config.get(CONF_CLIENT_ID, 'GaragePi-Assistant')
         )
+        if self.config.get(CONF_STATE_PAYLOAD_TEMPLATE, None) is None:
+            self.config[CONF_STATE_PAYLOAD_TEMPLATE] = DEFAULT_STATE_TEMPLATE
         self._client.on_connect = self._on_connect
         self._client.on_disconnect = self._on_disconnect
         self._client.on_message = self._on_message

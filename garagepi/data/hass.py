@@ -8,7 +8,8 @@ import voluptuous as vol
 import websocket
 
 from garagepi.common.async_utils import run_in_executor, create_task
-from garagepi.common.validation import entity_id
+from garagepi.common.const import CONF_NAME, DATA_INTERFACE_HASS
+from garagepi.common.validation import entity_id, constant_value
 from garagepi.data import Api
 
 CONF_CERT_VERIFY = 'cert_verify'
@@ -22,7 +23,8 @@ HASS_CONFIGURATION_SCHEMA = vol.Schema({
     vol.Required(CONF_ENTITY_ID): entity_id,
     vol.Optional(CONF_TOKEN, default=None): str,
     vol.Optional(CONF_FRIENDLY_NAME): str,
-    vol.Optional(CONF_CERT_VERIFY, default=True): vol.Coerce(bool)
+    vol.Optional(CONF_CERT_VERIFY, default=True): vol.Coerce(bool),
+    vol.Optional(CONF_NAME, default=DATA_INTERFACE_HASS): constant_value(DATA_INTERFACE_HASS)
 })
 
 

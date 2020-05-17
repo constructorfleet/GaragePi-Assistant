@@ -9,6 +9,8 @@ CONF_POSITION_OPEN_PIN = 'open_pin'
 CONF_POSITION_CLOSE_PIN = 'close_pin'
 CONF_POSITION_PINS = 'position_pins'
 CONF_PIN = 'pin'
+CONF_ENTITY_ID = 'entity_id'
+CONF_NAME = 'name'
 
 DATA_INTERFACE_MQTT = 'mqtt'
 DATA_INTERFACE_HASS = 'hass'

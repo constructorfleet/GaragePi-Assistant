@@ -2,7 +2,14 @@
   "open_garage_pin": 2,
   "close_garage_pin": 3,
   "open_pin": 5,
-  "close_pin": 4,
+  "close_pin": 8,
+  "positions": {
+    "0": 5,
+    "25": 4,
+    "50": 6,
+    "74": 7,
+    "100": 8
+  },
   "data_interface": {
     "broker_url": "http://starscream",
     "broker_port": "1883",
