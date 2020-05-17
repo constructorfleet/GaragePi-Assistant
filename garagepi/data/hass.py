@@ -104,7 +104,7 @@ class HassApi(Api):
             self.logger.warning("Unexpected result from Home Assistant, id = %s", self._id)
             self.logger.warning(result)
 
-        await self.AD.events.process_event(self.namespace, result["event"])
+        # TODO
 
     async def get_updates(self):
         while True:
@@ -118,7 +118,7 @@ class HassApi(Api):
 
                 await self._subscribe_to_service_calls()
 
-                while not self.stopping:
+                while True:
                     await self._consume_events()
 
                 self._is_connected = False

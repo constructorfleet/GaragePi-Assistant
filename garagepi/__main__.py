@@ -23,9 +23,9 @@ def main():
         description='Google EdgeTPU video stream detection'
     )
     parser.add_argument('-c', '--config', type=str, required=True,
-                        help='path to configuration file')
+                        help='Path to configuration file')
     parser.add_argument('-i', '--interactive', type=bool, required=False, default=False,
-                        help='path to labels file')
+                        help='Run interactive console')
     args = parser.parse_args()
 
     try:
@@ -39,8 +39,9 @@ def main():
             api = HassApi(config[CONF_DATA_INTERFACE], None)
         elif config[CONF_DATA_INTERFACE][CONF_NAME] == DATA_INTERFACE_MQTT:
             api = MqttApi(config[CONF_DATA_INTERFACE], None)
-        GaragePiAssistant(config, api)
         print(str(config))
+        assistant = GaragePiAssistant(config, api, args.interactive)
+        assistant.run()
     except Exception as e:
         _LOGGER.error(str(e))
         traceback.print_exc()
