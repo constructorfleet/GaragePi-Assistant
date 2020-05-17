@@ -8,9 +8,9 @@ import voluptuous as vol
 import websocket
 
 from garagepi.common.async_utils import run_in_executor, create_task
-from garagepi.common.const import CONF_NAME, DATA_INTERFACE_HASS
+from garagepi.common.const import CONF_NAME, API_HASS
 from garagepi.common.validation import entity_id, constant_value
-from garagepi.data import Api
+from garagepi.framework.data.Api import Api
 
 CONF_CERT_VERIFY = 'cert_verify'
 CONF_ENTITY_ID = 'entity_id'
@@ -24,7 +24,7 @@ HASS_CONFIGURATION_SCHEMA = vol.Schema({
     vol.Optional(CONF_TOKEN, default=None): str,
     vol.Optional(CONF_FRIENDLY_NAME): str,
     vol.Optional(CONF_CERT_VERIFY, default=True): vol.Coerce(bool),
-    vol.Optional(CONF_NAME, default=DATA_INTERFACE_HASS): constant_value(DATA_INTERFACE_HASS)
+    vol.Optional(CONF_NAME, default=API_HASS): constant_value(API_HASS)
 })
 
 
@@ -35,8 +35,8 @@ class HassApi(Api):
     _reading_messages = False
     _hass_booting = False
 
-    def __init__(self, configuration, command_listener):
-        super().__init__(configuration, command_listener)
+    def __init__(self, configuration):
+        super().__init__(configuration)
 
     def _validate_configuration(self, configuration):
         return HASS_CONFIGURATION_SCHEMA(configuration)
@@ -44,7 +44,7 @@ class HassApi(Api):
     def _initialize(self):
         create_task(self.get_updates())
 
-    def report_state(self):
+    def report_state(self, garage_door):
         pass
 
     async def _connect(self):
@@ -60,7 +60,7 @@ class HassApi(Api):
             ssl_options = {'cert_reqs': ssl.CERT_NONE}
 
         self._ws_client = websocket.create_connection(
-            "{}/api/websocket".format(url), sslopt=ssl_options
+            "{}/usecase/websocket".format(url), sslopt=ssl_options
         )
         res = await run_in_executor(self, self.ws.recv)
         return json.loads(res)

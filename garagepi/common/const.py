@@ -1,18 +1,18 @@
 COMMAND_OPEN = 'open'
 COMMAND_CLOSE = 'close'
 
-CONF_DATA_INTERFACE = 'data_interface'
+CONF_API = 'api'
 CONF_OPEN_GARAGE_PIN = 'open_garage_pin'
 CONF_CLOSE_GARAGE_PIN = 'close_garage_pin'
+CONF_TOGGLE_GARAGE_PIN = 'toggle_garage_pin'
+CONF_INVERT_RELAY = 'invert_relay'
 CONF_POSITIONS = 'positions'
-CONF_IS_OPEN_PIN = 'is_open_pin'
-CONF_IS_CLOSED_PIN = 'is_closed_pin'
 CONF_PIN = 'pin'
 CONF_ENTITY_ID = 'entity_id'
 CONF_NAME = 'name'
 
-DATA_INTERFACE_MQTT = 'mqtt'
-DATA_INTERFACE_HASS = 'hass'
+API_MQTT = 'mqtt'
+API_HASS = 'hass'
 
 POSITION_CLOSED = 'closed'
 POSITION_OPEN = 'open'

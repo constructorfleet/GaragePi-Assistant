@@ -4,16 +4,16 @@ import traceback
 
 import configargparse
 
-from garagepi.common.configuration import get_configuration_schema
-from garagepi.common.const import (
-    CONF_DATA_INTERFACE,
-    CONF_NAME,
-    DATA_INTERFACE_MQTT,
-    DATA_INTERFACE_HASS
-)
-from garagepi.data.hass import HassApi
-from garagepi.data.mqtt import MqttApi
 from garagepi import GaragePiAssistant
+from garagepi.common.configuration import validate_configuration
+from garagepi.common.const import (
+    CONF_API,
+    CONF_NAME,
+    API_MQTT,
+    API_HASS
+)
+from garagepi.data.api.hass import HassApi
+from garagepi.data.api.mqtt import MqttApi
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -29,16 +29,15 @@ def main():
     args = parser.parse_args()
 
     try:
-        config = None
         with open(args.config, 'r') as config_file:
             config = json.loads(config_file.read())
 
-        config = get_configuration_schema()(config)
+        config = validate_configuration(config)
         api = None
-        if config[CONF_DATA_INTERFACE][CONF_NAME] == DATA_INTERFACE_HASS:
-            api = HassApi(config[CONF_DATA_INTERFACE], None)
-        elif config[CONF_DATA_INTERFACE][CONF_NAME] == DATA_INTERFACE_MQTT:
-            api = MqttApi(config[CONF_DATA_INTERFACE], None)
+        if config[CONF_API][CONF_NAME] == API_HASS:
+            api = HassApi(config[CONF_API])
+        elif config[CONF_API][CONF_NAME] == API_MQTT:
+            api = MqttApi(config[CONF_API])
         print(str(config))
         assistant = GaragePiAssistant(config, api, args.interactive)
         assistant.run()

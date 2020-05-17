@@ -6,10 +6,10 @@ import paho.mqtt.client as mqtt
 import voluptuous as vol
 
 from garagepi.common.async_utils import run_in_executor
-from garagepi.common.const import DATA_INTERFACE_MQTT, CONF_NAME
+from garagepi.common.const import API_MQTT, CONF_NAME
 from garagepi.common.validation import valid_subscribe_topic, valid_publish_topic, \
     valid_state_template, constant_value
-from garagepi.data import Api
+from garagepi.framework.data.Api import Api
 
 CONF_BROKER_URL = 'broker_url'
 CONF_BROKER_PORT = 'broker_port'
@@ -67,12 +67,13 @@ MQTT_CONFIGURATION_SCHEMA = vol.Schema({
     vol.Optional(CONF_RETAIN, default=False): vol.Coerce(bool),
     vol.Optional(CONF_LAST_WILL): BIRTH_WILL_SCHEMA,
     vol.Optional(CONF_BIRTH): BIRTH_WILL_SCHEMA,
-    vol.Optional(CONF_NAME, default=DATA_INTERFACE_MQTT): constant_value(DATA_INTERFACE_MQTT)
+    vol.Optional(CONF_NAME, default=API_MQTT): constant_value(API_MQTT)
 })
 
 
 class MqttApi(Api):
     """Interface with MQTT broker."""
+
     _client = None
     _first_connection = True
 
@@ -141,7 +142,7 @@ class MqttApi(Api):
                                      error_message)
 
             # continue processing
-            self.mqtt_connect_event.set()
+            self._connect_event.set()
         except:
             self.logger.critical("There was an error while trying to setup the Mqtt Service")
             self.logger.warn(
@@ -206,9 +207,9 @@ class MqttApi(Api):
                     " correct and broker is not down and restart the application",
                     self.config[CONF_BROKER_URL], self.config[CONF_BROKER_PORT])
 
-                self.mqtt_client.loop_stop()
+                self._client.loop_stop()
                 # disconnect so it won't attempt reconnection if the broker was to come up
-                self.mqtt_client.disconnect()
+                self._client.disconnect()
 
-    def report_state(self):
+    def report_state(self, garage_door):
         pass

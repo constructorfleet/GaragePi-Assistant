@@ -2,14 +2,19 @@ import re
 
 import voluptuous as vol
 
-from garagepi.common.const import DATA_INTERFACE_HASS, DATA_INTERFACE_MQTT, COMMAND_OPEN, \
-    COMMAND_CLOSE, TEMPLATE_STATE
+from garagepi.common.const import (
+    API_HASS,
+    API_MQTT,
+    COMMAND_OPEN,
+    COMMAND_CLOSE,
+    TEMPLATE_STATE
+)
 
 FLOAT_PATTERN = re.compile(r'[+-]?([0-9]*[.])?[0-9]+')
 
 VALID_INTERFACES = vol.Any(
-    DATA_INTERFACE_HASS,
-    DATA_INTERFACE_MQTT
+    API_HASS,
+    API_MQTT
 )
 
 VALID_COMMANDS = vol.Any(
@@ -18,39 +23,39 @@ VALID_COMMANDS = vol.Any(
 )
 
 VALID_GPIO_PINS = vol.In([
-        2,
-        3,
-        4,
-        17,
-        27,
-        22,
-        10,
-        11,
-        5,
-        6,
-        13,
-        19,
-        26,
-        18,
-        23,
-        24,
-        25,
-        8,
-        7,
-        12,
-        16,
-        20,
-        21
-    ])
+    2,
+    3,
+    4,
+    17,
+    27,
+    22,
+    10,
+    11,
+    5,
+    6,
+    13,
+    19,
+    26,
+    18,
+    23,
+    24,
+    25,
+    8,
+    7,
+    12,
+    16,
+    20,
+    21
+])
 
 
 def keys_with_schema(
-    key_schema,
-    value_schema
+        key_schema,
+        value_schema
 ):
     """Ensure all keys follow schema."""
 
-    schema = vol.Schema({int: value_schema})
+    schema = vol.Schema({str: value_schema})
 
     def verify(value):
         """Validate all keys pass value_schema."""
@@ -58,9 +63,8 @@ def keys_with_schema(
             raise vol.Invalid("expected dictionary")
 
         result = {}
-        for key, value in value.items():
-            valid_key = key_schema(value)
-            result[valid_key] = value
+        for key in value.keys():
+            result[key_schema(key)] = value[key]
 
         return schema(result)
 
@@ -77,7 +81,7 @@ def is_valid_entity_id(value):
         return False
 
     return (isinstance(value, str) and
-            '.' in entity_id and
+            '.' in value and
             value == value.replace(' ', '_'))
 
 
@@ -157,6 +161,7 @@ def valid_state_template(value):
 
 def constant_value(value):
     """No matter the input, return the value."""
+
     def constant(input_value):
         return value
 
@@ -182,9 +187,8 @@ class ValidateNumericPosition:
     _used_positions = set()
 
     def __call__(self, value):
-        float_value = vol.Coerce(float)(
-            float(str(value)[-1]) if isinstance(value, str) else value)
-        int_value = vol.Coerce(int)(float_value * 10 if float_value < 1.0 else float_value)
-        if int_value in self._used_positions:
-            raise vol.Invalid("Position {} is already used elsewhere".format(str(value)))
-        return int_value
+        str_value = str(value)
+        if str_value.endswith('%'):
+            str_value = str_value[-1]
+        vol.Coerce(int)(str_value)
+        return str_value

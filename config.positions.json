@@ -1,20 +1,19 @@
 {
+  "entity_id": "cover.test",
   "open_garage_pin": 2,
   "close_garage_pin": 3,
-  "is_open_pin": 5,
-  "is_closed_pin": 8,
   "positions": {
     "0": 5,
     "25": 4,
     "50": 6,
-    "74": 7,
+    "75": 7,
     "100": 8
   },
-  "data_interface": {
+  "api": {
     "broker_url": "http://starscream",
     "broker_port": "1883",
     "client_id": "test",
     "command_topic": "events/#",
-    "state_topic": "states/slaves/cover.garage_door_test"
+    "state_topic": "test/states/slaves/cover.garage_door_test"
   }
 }
