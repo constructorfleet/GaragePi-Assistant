@@ -3,11 +3,12 @@ import asyncio
 import json
 import ssl
 import traceback
+from concurrent.futures.thread import ThreadPoolExecutor
 
 import voluptuous as vol
 import websocket
 
-from garagepi.common.async_utils import run_in_executor, create_task
+from garagepi.common.async_utils import create_task
 from garagepi.common.const import CONF_NAME, API_HASS
 from garagepi.common.validation import entity_id, constant_value
 from garagepi.framework.data.Api import Api
@@ -34,6 +35,7 @@ class HassApi(Api):
     _id = 0
     _reading_messages = False
     _hass_booting = False
+    _executor = ThreadPoolExecutor()
 
     def __init__(self, configuration):
         super().__init__(configuration)
@@ -62,7 +64,7 @@ class HassApi(Api):
         self._ws_client = websocket.create_connection(
             "{}/usecase/websocket".format(url), sslopt=ssl_options
         )
-        res = await run_in_executor(self, self.ws.recv)
+        res = await asyncio.get_event_loop().run_in_executor(self._executor, self._ws_client.recv)
         return json.loads(res)
 
     async def _authenticate(self):
@@ -75,7 +77,7 @@ class HassApi(Api):
             raise ValueError(
                 "HASS requires authentication and none provided in plugin config")
 
-        await run_in_executor(self, self.ws.send, auth)
+        await asyncio.get_event_loop().run_in_executor(self._executor, self._ws_client.send, auth)
         result = json.loads(self.ws.recv())
         if result["type"] != "auth_ok":
             self.logger.warning("Error in authentication")
@@ -87,8 +89,8 @@ class HassApi(Api):
             "type": "subscribe_events",
             "event_type": "call_service"
         })
-        await run_in_executor(self, self.ws.send, sub)
-        result = json.loads(self.ws.recv())
+        await asyncio.get_event_loop().run_in_executor(self._executor, self._ws_client.send, sub)
+        result = json.loads(self._ws_client.recv())
         if not (result["id"] == self._id and
                 result["type"] == "result" and
                 result["success"] is True):
@@ -97,7 +99,7 @@ class HassApi(Api):
             raise ValueError("Error subscribing to HA Events")
 
     async def _consume_events(self):
-        ret = await run_in_executor(self, self.ws.recv)
+        ret = await asyncio.get_event_loop().run_in_executor(self._executor, self._ws_client.recv)
         result = json.loads(ret)
 
         if not (result["id"] == self._id and result["type"] == "event"):

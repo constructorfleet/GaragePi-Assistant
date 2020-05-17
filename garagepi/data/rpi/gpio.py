@@ -1,11 +1,18 @@
+import logging
+
+initialized = False
+
 try:
     import RPi.GPIO as gpio
+    initialized = True
 except (RuntimeError, ModuleNotFoundError):
-    import fake_rpigpio.utils
+    if not initialized:
+        import fake_rpigpio.utils
 
-    fake_rpigpio.utils.install()
-    from fake_rpigpio.RPi import _FakeGPIO as fake_gpio
+        fake_rpigpio.utils.install()
+        from fake_rpigpio.RPi import _FakeGPIO as fake_gpio
 
+        _LOGGER = logging.getLogger(__name__)
 
     class MockPin:
         __slots__ = ['channel', 'mode', 'value', 'pud']
@@ -18,7 +25,6 @@ except (RuntimeError, ModuleNotFoundError):
 
         def __str__(self):
             return "{} {} {}".format(self.channel, self.mode, self.value)
-
 
     class MockGPIO(fake_gpio):
         _out_pins = {}
@@ -52,14 +58,18 @@ except (RuntimeError, ModuleNotFoundError):
                 del self._events[gpio]
 
         def output(self, channel, value):
+            _LOGGER.warning('OUTPUT')
             pin = self._out_pins.get(channel, None)
             if pin is None:
+                _LOGGER.warning('output- pin none')
                 return
             if pin.value != value:
                 pin.value = value
-                print('Notifying')
+                _LOGGER.info('Notifying')
                 self._out_pins[channel].value = value
-                self._notify(channel, value)
+                self.wait_for_edge(channel, value)
+            else:
+                _LOGGER.warning('No change in pin value')
 
         def input(self, channel):
             pin = self._in_pins.get(channel, None)
@@ -80,6 +90,5 @@ except (RuntimeError, ModuleNotFoundError):
             if callback is None:
                 return
             callback(channel, value)
-
 
     gpio = MockGPIO()

@@ -10,7 +10,7 @@
     "100": 8
   },
   "api": {
-    "broker_url": "http://starscream",
+    "broker_url": "starscream",
     "broker_port": "1883",
     "client_id": "test",
     "command_topic": "events/#",

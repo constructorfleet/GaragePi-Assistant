@@ -17,9 +17,14 @@ class Api(abc.ABC):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.config = self._validate_configuration(configuration)
         # self._command_listener = command_listener
+        self._initialize()
 
     @abc.abstractmethod
     def _initialize(self):
+        pass
+
+    @abc.abstractmethod
+    async def get_updates(self):
         pass
 
     def _validate_configuration(self, configuration):
@@ -27,9 +32,13 @@ class Api(abc.ABC):
 
     def _process_event(self, event):
         event_type = event.get('event_type', None)
+        if event_type is None and event_type != 'call_service':
+            return
         event_data = event.get('data', {})
         service = event_data.get(SERVICE, None)
-        service_data = event_data.get(SERVICE_DATA, None)
+        if service is None or not service.startswith('cover.'):
+            return
+        service_data = event_data.get(SERVICE_DATA, {})
         entity_ids = service_data.get(ENTITY_ID, self.config[CONF_ENTITY_ID])
         entity_ids = [entity_ids] if isinstance(entity_ids, list) else entity_ids
         if not (event_type == 'call_service' and

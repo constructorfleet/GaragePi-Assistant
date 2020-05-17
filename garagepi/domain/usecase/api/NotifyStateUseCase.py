@@ -8,8 +8,10 @@ class NotifyStateUseCase(UseCase):
 
     def __init__(self, api):
         """Initialize use case."""
+        super().__init__()
         self.api = api
 
     def __call__(self, garage_door):
         """Invoke data method to report state."""
+        self.logger.info('Reporting')
         self.api.report_state(garage_door)

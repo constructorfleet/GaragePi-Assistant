@@ -11,12 +11,9 @@ class CommandUseCase(UseCase):
 
     __slots__ = ['pin', 'on_time', 'invert']
 
-    def __init__(
-            self,
-            pin,
-            on_time=DEFAULT_ON_TIME,
-            invert=False):
+    def __init__(self, pin, on_time=DEFAULT_ON_TIME, invert=False):
         """Initialize use case."""
+        super().__init__()
         self.pin = pin
         self.on_time = on_time
         self.invert = invert

@@ -84,7 +84,7 @@ def get_application(configuration, interactive=False):
                       config.get(CONF_OPEN_GARAGE_PIN),
                       config.get(CONF_TOGGLE_GARAGE_PIN)],
         position_pins=config[CONF_POSITIONS].values()
-    )
+    )()
 
     if CONF_TOGGLE_GARAGE_PIN in config:
         open_command = close_command = get_command_toggle_use_case(
@@ -114,5 +114,7 @@ def get_application(configuration, interactive=False):
                 garage_door,
                 get_notify_state_use_case(api)
             )
-        )
+        ),
+        api=api,
+        interactive=interactive
     )

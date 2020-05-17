@@ -14,6 +14,7 @@ from garagepi.common.const import (
 )
 from garagepi.data.api.hass import HassApi
 from garagepi.data.api.mqtt import MqttApi
+from garagepi.di.test import get_application
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -32,15 +33,17 @@ def main():
         with open(args.config, 'r') as config_file:
             config = json.loads(config_file.read())
 
-        config = validate_configuration(config)
-        api = None
-        if config[CONF_API][CONF_NAME] == API_HASS:
-            api = HassApi(config[CONF_API])
-        elif config[CONF_API][CONF_NAME] == API_MQTT:
-            api = MqttApi(config[CONF_API])
-        print(str(config))
-        assistant = GaragePiAssistant(config, api, args.interactive)
-        assistant.run()
+        get_application(config, True).run()
+
+        # config = validate_configuration(config)
+        # api = None
+        # if config[CONF_API][CONF_NAME] == API_HASS:
+        #     api = HassApi(config[CONF_API])
+        # elif config[CONF_API][CONF_NAME] == API_MQTT:
+        #     api = MqttApi(config[CONF_API])
+        # print(str(config))
+        # assistant = GaragePiAssistant(config, api, args.interactive)
+        # assistant.run()
     except Exception as e:
         _LOGGER.error(str(e))
         traceback.print_exc()

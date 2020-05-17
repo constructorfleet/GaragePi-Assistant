@@ -1,11 +1,11 @@
 import asyncio
 import json
 import traceback
+from concurrent.futures.thread import ThreadPoolExecutor
 
 import paho.mqtt.client as mqtt
 import voluptuous as vol
 
-from garagepi.common.async_utils import run_in_executor
 from garagepi.common.const import API_MQTT, CONF_NAME
 from garagepi.common.validation import valid_subscribe_topic, valid_publish_topic, \
     valid_state_template, constant_value
@@ -50,7 +50,7 @@ BIRTH_WILL_SCHEMA = vol.Schema({
 })
 
 MQTT_CONFIGURATION_SCHEMA = vol.Schema({
-    vol.Required(CONF_BROKER_URL): vol.Url,
+    vol.Required(CONF_BROKER_URL): str,
     vol.Optional(CONF_BROKER_PORT, default=1883): vol.All(
         vol.Coerce(int),
         vol.Range(min=1, max=65535)),
@@ -91,6 +91,7 @@ class MqttApi(Api):
     def _start(self):
         try:
             if self._first_connection:
+                self.logger.info('Config %s', str(self.config))
                 if CONF_USER in self.config and CONF_PAYLOAD in self.config:
                     self._client.username_pw_set(self.config[CONF_USER],
                                                  self.config[CONF_PASSWORD])
@@ -151,15 +152,14 @@ class MqttApi(Api):
 
     def _on_message(self, client, userdata, msg):
         try:
-            self.logger.debug("Message Received: Topic = %s, Payload = %s", msg.topic, msg.payload)
-            topic = msg.topic
+            self.logger.info("Message Received: Topic = %s, Payload = %s", msg.topic, msg.payload.decode())
             try:
                 payload_dict = json.loads(msg.payload.decode())
             except TypeError:
                 self.logger.critical("Payload is not JSON")
                 return
 
-            self._process_event(msg.payload.decode)
+            self._process_event(payload_dict)
         except UnicodeDecodeError:
             self.logger.info("Unable to decode MQTT message")
             self.logger.debug('Unable to decode MQTT message, with Traceback: %s',
@@ -192,16 +192,19 @@ class MqttApi(Api):
         return MQTT_CONFIGURATION_SCHEMA(configuration)
 
     async def get_updates(self):
+        executor = ThreadPoolExecutor()
         while True:
             if self._is_connected:
                 await asyncio.sleep(5)
                 continue
             # noinspection PyBroadException
             try:
-                await asyncio.wait_for(run_in_executor(self, self._start), 5.0)
+                await asyncio.wait_for(
+                    asyncio.get_event_loop().run_in_executor(executor, self._start), 5.0)
                 await asyncio.wait_for(self._connect_event.wait(), 5.0)
 
             except asyncio.TimeoutError:
+                self.logger.warning(str(self.config))
                 self.logger.critical(
                     "Could not Complete Connection to Broker, please Ensure Broker at URL %s:%s is"
                     " correct and broker is not down and restart the application",

@@ -20,7 +20,7 @@ class Interactive:
             pin = int(input())
             print('1 or 0? ')
             value = int(input())
-            gpio.write_output(pin, value)
+            gpio.output(pin, value)
 
 
 class GaragePiAssistant:
