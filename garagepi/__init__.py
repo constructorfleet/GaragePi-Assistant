@@ -31,7 +31,10 @@ class GaragePiAssistant:
     def _setup_gpio_pins(self):
         for config, pin_mode in CONFIG_PIN_MODES.items():
             print('Config key {}, mode {}'.format(config, pin_mode))
-            config_value = self.config[config]
+            config_value = self.config.get(config, None)
+            if config_value is None:
+                continue
+
             config_value = config_value if isinstance(config_value, list) else [config_value]
             for position_pin in config_value:
                 if pin_mode == gpio.IN:

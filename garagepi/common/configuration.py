@@ -5,8 +5,8 @@ from garagepi.common.const import (
     CONF_POSITIONS,
     CONF_CLOSE_GARAGE_PIN,
     CONF_OPEN_GARAGE_PIN,
-    CONF_POSITION_OPEN_PIN,
-    CONF_POSITION_CLOSE_PIN
+    CONF_IS_OPEN_PIN,
+    CONF_IS_CLOSED_PIN
 )
 from garagepi.common.validation import (
     ValidateGPIOPin,
@@ -28,7 +28,7 @@ def get_configuration_schema():
         ),
         vol.Required(CONF_OPEN_GARAGE_PIN): valid_gpio_pin,
         vol.Required(CONF_CLOSE_GARAGE_PIN): valid_gpio_pin,
-        vol.Required(CONF_POSITION_OPEN_PIN): valid_gpio_pin,
-        vol.Required(CONF_POSITION_CLOSE_PIN): valid_gpio_pin,
+        vol.Required(CONF_IS_OPEN_PIN): valid_gpio_pin,
+        vol.Required(CONF_IS_CLOSED_PIN): valid_gpio_pin,
         vol.Optional(CONF_POSITIONS): keys_with_schema(valid_numeric_position, VALID_GPIO_PINS)
     }, extra=vol.ALLOW_EXTRA)
