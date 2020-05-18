@@ -9,6 +9,7 @@ class GetPositionUseCase(UseCase):
 
     def __init__(self, pin_position_map, on_level):
         """Initialize get position use case."""
+        super().__init__()
         self.pin_position_map = pin_position_map
         self.on_level = on_level
 
@@ -16,5 +17,5 @@ class GetPositionUseCase(UseCase):
         """Determine position from input pins."""
         for pin, position in self.pin_position_map:
             if gpio.input(pin) == self.on_level:
-                return position
+                return int(position)
         return 0

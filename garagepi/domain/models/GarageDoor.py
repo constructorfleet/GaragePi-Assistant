@@ -45,17 +45,17 @@ class GarageDoor:
     @property
     def state(self):
         if not self.in_motion \
-                and self._position not in [0, 100]:
+                and self.position not in [0, 100]:
             return DoorState.STOPPED.value
-        if self._position == self._prev_position:
+        if self.position == self.prev_position:
             self.in_motion = False
-            if self._position == 0:
+            if self.position == 0:
                 return DoorState.CLOSED.value
-            if 100 == self._position:
+            if 100 == self.position:
                 return DoorState.OPEN.value
-        if self._position > self._prev_position and self.in_motion:
+        if self.position > self.prev_position and self.in_motion:
             return DoorState.OPENING.value
-        if self._position < self._prev_position and self.in_motion:
+        if self.position < self.prev_position and self.in_motion:
             return DoorState.CLOSING.value
 
     @property

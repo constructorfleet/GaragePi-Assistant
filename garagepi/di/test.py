@@ -104,7 +104,7 @@ def get_application(configuration):
     api = get_build_api_use_case(config[CONF_API])()
     garage_door = get_build_garage_door_use_case(
         config[CONF_ENTITY_ID]
-    )(get_position_use_case(config[CONF_POSITIONS]))
+    )(get_position_use_case(config[CONF_POSITIONS])())
 
     return App(
         garage_door=get_build_garage_door_use_case(config[CONF_ENTITY_ID]),
