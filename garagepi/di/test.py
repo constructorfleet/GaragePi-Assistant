@@ -108,7 +108,7 @@ def get_application(configuration):
     )
 
     return App(
-        garage_door=get_build_garage_door_use_case(config[CONF_ENTITY_ID]),
+        garage_door=garage_door,
         open_command=open_command,
         close_command=close_command,
         on_position_change=get_handle_position_change_use_case(

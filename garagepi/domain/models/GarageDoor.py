@@ -24,7 +24,7 @@ class GarageDoor:
 
     def __init__(self, entity_id, initial_position):
         self.entity_id = entity_id
-        self._position = self._prev_position = initial_position
+        self._position = self._prev_position = initial_position()
 
     @property
     def is_closed(self):
