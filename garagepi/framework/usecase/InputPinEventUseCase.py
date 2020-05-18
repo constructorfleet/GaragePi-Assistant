@@ -17,7 +17,7 @@ class InputPinEventUseCase(UseCase, abc.ABC):
     def __call__(self, *args, **kwargs):
         for pin in self.pins:
             self.logger.warning('Adding call back to %s', str(pin))
-            gpio.setup(pin, gpio.IN, pull_up_down=gpio.PUD_UP)
+            gpio.setup(pin, gpio.IN, pull_up_down=gpio.PUD_OFF)
             gpio.add_event_detect(pin, gpio.RISING)
             gpio.add_event_callback(pin, self._pin_event_callback)
 
