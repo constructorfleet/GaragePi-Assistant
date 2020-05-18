@@ -1,0 +1,20 @@
+{
+  "entity_id": "cover.garage_door",
+  "toggle_garage_pin": 2,
+  "invert_relay": true,
+  "interactive": true,
+  "positions": {
+    "0": 21,
+    "25": 0,
+    "50": 20,
+    "75": 20,
+    "100": 16
+  },
+  "api": {
+    "broker_url": "starscream",
+    "broker_port": "1883",
+    "client_id": "test",
+    "command_topic": "events/#",
+    "state_topic": "states/slaves/garagepi/cover.test"
+  }
+}

@@ -37,8 +37,8 @@ class HassApi(Api):
     _hass_booting = False
     _executor = ThreadPoolExecutor()
 
-    def __init__(self, configuration):
-        super().__init__(configuration)
+    def __init__(self, configuration, open_command, close_command):
+        super().__init__(configuration, open_command, close_command)
 
     def _validate_configuration(self, configuration):
         return HASS_CONFIGURATION_SCHEMA(configuration)

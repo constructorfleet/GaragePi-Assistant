@@ -11,12 +11,15 @@ class Api(abc.ABC):
     """Abstract remote data interface."""
 
     _is_connected = False
+    _open_command = None
+    _close_command = None
 
-    def __init__(self, configuration):
+    def __init__(self, configuration, open_command, close_command):
         """Initialize the remote data interface."""
         self.logger = logging.getLogger(self.__class__.__name__)
         self.config = self._validate_configuration(configuration)
-        # self._command_listener = command_listener
+        self._open_command = open_command
+        self._close_command = close_command
         self._initialize()
 
     @abc.abstractmethod
@@ -56,11 +59,7 @@ class Api(abc.ABC):
         """"Handler for receiving a command."""
         if command not in VALID_COMMANDS:
             raise ValueError('Invalid command received')
-        self._command_listener.on_command(command)
-
-
-class CommandListener(abc.ABC):
-    """Abstract listener for commands to process."""
-
-    def on_command(self, command):
-        pass
+        if command == COMMAND_OPEN:
+            self._open_command()
+        elif command == COMMAND_CLOSE:
+            self._close_command()

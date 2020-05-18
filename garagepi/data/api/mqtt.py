@@ -80,6 +80,9 @@ class MqttApi(Api):
     _client = None
     _first_connection = True
 
+    def __init__(self, configuration, open_command, close_command):
+        super().__init__(configuration, open_command, close_command)
+
     def _initialize(self):
         self._client = mqtt.Client(
             client_id=self.config.get(CONF_CLIENT_ID, 'GaragePi-Assistant')

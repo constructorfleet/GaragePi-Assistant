@@ -28,19 +28,19 @@ def get_notify_state_use_case(api):
     return NotifyStateUseCase(api)
 
 
-def get_command_close_use_case(pin, invert):
+def get_command_close_use_case(pin, garage_door, invert):
     """Get use case for sending close command."""
-    return CommandCloseUseCase(pin, invert=invert)
+    return CommandCloseUseCase(pin, garage_door, invert=invert)
 
 
-def get_command_open_use_case(pin, invert):
+def get_command_open_use_case(pin, garage_door, invert):
     """Get use case for sending open command."""
-    return CommandOpenUseCase(pin, invert=invert)
+    return CommandOpenUseCase(pin, garage_door, invert=invert)
 
 
-def get_command_toggle_use_case(pin, invert):
+def get_command_toggle_use_case(pin, garage_door, invert):
     """Get use case for sending toggle command."""
-    return CommandToggleUseCase(pin, invert=invert)
+    return CommandToggleUseCase(pin, garage_door, invert=invert)
 
 
 def get_build_garage_door_use_case(entity_id):
@@ -87,24 +87,28 @@ def get_application(configuration):
         in_pins=config.get(CONF_POSITIONS, {}).values(),
         out_pins=list(out_pins))()
 
-    if CONF_TOGGLE_GARAGE_PIN in config:
-        open_command = close_command = get_command_toggle_use_case(
-            config[CONF_TOGGLE_GARAGE_PIN],
-            invert)
-    else:
-        open_command = get_command_open_use_case(
-            config[CONF_OPEN_GARAGE_PIN],
-            invert
-        )
-        close_command = get_command_close_use_case(
-            config[CONF_CLOSE_GARAGE_PIN],
-            invert
-        )
-    api = get_build_api_use_case(config[CONF_API])()
     garage_door = get_build_garage_door_use_case(
         config[CONF_ENTITY_ID])(
         get_position_use_case(config[CONF_POSITIONS])
     )
+    api = get_build_api_use_case(config[CONF_API])()
+
+    if CONF_TOGGLE_GARAGE_PIN in config:
+        open_command = close_command = get_command_toggle_use_case(
+            config[CONF_TOGGLE_GARAGE_PIN],
+            garage_door,
+            invert)
+    else:
+        open_command = get_command_open_use_case(
+            config[CONF_OPEN_GARAGE_PIN],
+            garage_door,
+            invert
+        )
+        close_command = get_command_close_use_case(
+            config[CONF_CLOSE_GARAGE_PIN],
+            garage_door,
+            invert
+        )
 
     return App(
         garage_door=garage_door,
