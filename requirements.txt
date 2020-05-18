@@ -1,0 +1,14 @@
+asyncio==3.4.3
+certifi==2020.4.5.1
+chardet==3.0.4
+ConfigArgParse==1.2.3
+fake-rpigpio==0.1.1
+gevent==20.5.0
+greenlet==0.4.15
+idna==2.9
+paho-mqtt==1.5.0
+requests==2.23.0
+six==1.14.0
+urllib3==1.25.9
+voluptuous==0.11.7
+websocket-client==0.57.0
