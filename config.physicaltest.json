@@ -1,0 +1,17 @@
+{
+  "entity_id": "cover.test",
+  "toggle_garage_pin": 2,
+  "invert_relay": true,
+  "positions": {
+    "0": 5,
+    "50": 6,
+    "100": 8
+  },
+  "api": {
+    "broker_url": "starscream",
+    "broker_port": "1883",
+    "client_id": "test",
+    "command_topic": "events/#",
+    "state_topic": "test/states/slaves/cover.garage_door_test"
+  }
+}

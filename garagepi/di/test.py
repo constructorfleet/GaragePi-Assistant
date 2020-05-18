@@ -13,7 +13,7 @@ from garagepi.domain.usecase.models import (
     SetGarageDoorPositionUseCase
 )
 from garagepi.domain.usecase.retrieval.GetPositionUseCase import GetPositionUseCase
-from garagepi.domain.usecase.retrieval.HandlePositionChangeUseCase import \
+from garagepi.domain.usecase.retrieval.InputPinEventUseCase import \
     HandlePositionChangeUseCase
 from garagepi.domain.usecase.rpi.SetupPinsUseCase import SetupPinsUseCase
 
@@ -114,7 +114,7 @@ def get_application(configuration, interactive=False):
                 garage_door,
                 get_notify_state_use_case(api)
             )
-        ),
+        )(),
         api=api,
         interactive=interactive
     )

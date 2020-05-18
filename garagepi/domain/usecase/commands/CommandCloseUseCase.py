@@ -1,3 +1,5 @@
+from time import sleep
+
 from garagepi.framework.usecase.CommandUseCase import CommandUseCase
 
 

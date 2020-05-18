@@ -86,8 +86,10 @@ except (RuntimeError, ModuleNotFoundError):
                 self._notify(channel, value)
 
         def _notify(self, channel, value):
+            print('Callback keys {}'.format(str(self._event_callbacks)))
             callback = self._event_callbacks.get(channel, None)
             if callback is None:
+                print('No callback')
                 return
             callback(channel, value)
 

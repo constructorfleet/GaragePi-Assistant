@@ -4,13 +4,14 @@ from garagepi.data.rpi import gpio
 from garagepi.framework.usecase import UseCase
 
 
-class PinEventUseCase(UseCase, abc.ABC):
+class InputPinEventUseCase(UseCase, abc.ABC):
     """Base class for retrieval use cases."""
 
     __slots__ = ['pins']
 
     def __init__(self, pins):
         """Initialize retrieval use case."""
+        super().__init__()
         self.pins = pins
 
     def __call__(self, *args, **kwargs):

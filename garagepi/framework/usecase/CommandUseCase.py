@@ -17,6 +17,25 @@ class CommandUseCase(UseCase):
         self.pin = pin
         self.on_time = on_time
         self.invert = invert
+        self._add_gpio_callbacks()
+
+    def _add_gpio_callbacks(self):
+        gpio.add_event_detect(self.pin, gpio.RISING if self.invert else gpio.FALLING)
+        gpio.add_event_callback(self.pin, self._pin_event_callback)
+
+    def _pin_event_callback(self, pin, value):
+        label = self.__class__.__name__ \
+            .replace('Command', '').replace('UseCase', '')
+        for idx in range(1, 5):
+            self.logger.warning('%s %s', label, str(idx / 5))
+            sleep(3)
+        self.logger.warning('Closing Garage')
+        for position in ['75', '50', '25']:
+            if position not in self._position_pins:
+                print('{} not in {}'.format(position, self._position_pins))
+                continue
+            print(position.replace('_pin', ''))
+            sleep(3)
 
     def write_pin(self):
         gpio.output(

@@ -1,7 +1,7 @@
-from garagepi.framework.usecase.PinEventUseCase import PinEventUseCase
+from garagepi.framework.usecase.InputPinEventUseCase import InputPinEventUseCase
 
 
-class HandlePositionChangeUseCase(PinEventUseCase):
+class HandlePositionChangeUseCase(InputPinEventUseCase):
     """Use case for handling position change."""
 
     __slots__ = ['pin_position_map', 'set_position']

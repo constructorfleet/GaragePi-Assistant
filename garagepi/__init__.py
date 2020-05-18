@@ -65,10 +65,10 @@ class GaragePiAssistant:
                 pull_up_down=gpio.PUD_DOWN)
             if config_key == CONF_OPEN_GARAGE_PIN:
                 self._open_garage_pin = position_pin
-                gpio.add_event_callback(gpio, self._handle_open_command)
+                gpio.add_event_callback(position_pin, self._handle_open_command)
             elif config_key == CONF_CLOSE_GARAGE_PIN:
                 self._close_garage_pin = position_pin
-                gpio.add_event_callback(gpio, self._handle_close_command)
+                gpio.add_event_callback(position_pin, self._handle_close_command)
         else:
             gpio.setup(
                 position_pin,
