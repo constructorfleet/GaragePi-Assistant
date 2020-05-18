@@ -17,6 +17,7 @@ class SetupPinsUseCase(UseCase):
 
     def __call__(self, *args, **kwargs):
         self.logger.info("Setting up pins")
+        gpio.setmode(gpio.BCM)
         for pin in self.out_pins:
             if pin is None:
                 continue
