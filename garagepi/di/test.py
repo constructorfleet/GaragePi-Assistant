@@ -83,7 +83,6 @@ def get_application(configuration):
                 config.get(CONF_OPEN_GARAGE_PIN),
                 config.get(CONF_TOGGLE_GARAGE_PIN)}
 
-
     get_setup_pins_use_case(
         in_pins=config.get(CONF_POSITIONS, {}).values(),
         out_pins=list(out_pins))()
