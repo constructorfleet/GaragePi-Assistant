@@ -33,7 +33,7 @@ def main():
         with open(args.config, 'r') as config_file:
             config = json.loads(config_file.read())
 
-        get_application(config, True).run()
+        get_application(config).run()
 
         # config = validate_configuration(config)
         # api = None
