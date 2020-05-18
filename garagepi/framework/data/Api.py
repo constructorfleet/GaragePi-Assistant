@@ -1,6 +1,7 @@
 """Remote Data Implementations."""
 import abc
 import logging
+import traceback
 
 from garagepi.common.const import SERVICE, SERVICE_DATA, ENTITY_ID, SERVICE_OPEN, SERVICE_CLOSE, \
     COMMAND_OPEN, COMMAND_CLOSE, CONF_ENTITY_ID
@@ -34,22 +35,31 @@ class Api(abc.ABC):
         raise NotImplementedError()
 
     def _process_event(self, event):
-        event_type = event.get('event_type', None)
-        if event_type is None and event_type != 'call_service':
+        if event is None:
             return
-        event_data = event.get('data', {})
-        service = event_data.get(SERVICE, None)
-        if service is None or not service.startswith('cover.'):
-            return
-        service_data = event_data.get(SERVICE_DATA, {})
-        entity_ids = service_data.get(ENTITY_ID, self.config[CONF_ENTITY_ID])
-        entity_ids = [entity_ids] if isinstance(entity_ids, list) else entity_ids
-        if not (event_type == 'call_service' and
-                service in [SERVICE_OPEN, SERVICE_CLOSE] and
-                self.config[CONF_ENTITY_ID] in entity_ids):
-            return
-
-        self.on_command(COMMAND_OPEN if service == SERVICE_OPEN else COMMAND_CLOSE)
+        try:
+            event_type = event.get('event_type', None)
+            if event_type is None and event_type != 'call_service':
+                return
+            event_data = event.get('data', {})
+            service = event_data.get(SERVICE, None)
+            if service is None or not service.startswith('cover.'):
+                return
+            service_data = event_data.get(SERVICE_DATA, {})
+            entity_ids = service_data.get(ENTITY_ID, self.config[CONF_ENTITY_ID])
+            entity_ids = [entity_ids] if isinstance(entity_ids, list) else entity_ids
+            if not (event_type == 'call_service' and
+                    service in [SERVICE_OPEN, SERVICE_CLOSE] and
+                    self.config[CONF_ENTITY_ID] in entity_ids):
+                return
+            self.on_command(COMMAND_OPEN if service == SERVICE_OPEN else COMMAND_CLOSE)
+        except Exception as e:
+            self.logger.error(
+                'Error while processing event: %s\n%s'.format(
+                    str(e),
+                    traceback.format_exc()
+                )
+            )
 
     def report_state(self, garage_door):
         """Report the state of the garage door to the remote data interface."""

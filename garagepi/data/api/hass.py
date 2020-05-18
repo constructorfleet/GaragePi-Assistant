@@ -33,6 +33,7 @@ class HassApi(Api):
     """Interface with Home-Assistant instance."""
     _ws_client = None
     _id = 0
+    _token = None
     _reading_messages = False
     _hass_booting = False
     _executor = ThreadPoolExecutor()
@@ -50,6 +51,7 @@ class HassApi(Api):
         pass
 
     async def _connect(self):
+        self._token = self.config.get(CONF_TOKEN, None)
         # Open websocket connection to Home-Assistant instance
         url = self.config[CONF_URL]
         if url.startswith('https://'):
@@ -68,17 +70,17 @@ class HassApi(Api):
         return json.loads(res)
 
     async def _authenticate(self):
-        if self.token is not None:
+        if self._token is not None:
             auth = json.dumps({
                 "type": "auth",
-                "access_token": self.token
+                "access_token": self._token
             })
         else:
             raise ValueError(
                 "HASS requires authentication and none provided in plugin config")
 
         await asyncio.get_event_loop().run_in_executor(self._executor, self._ws_client.send, auth)
-        result = json.loads(self.ws.recv())
+        result = json.loads(self._ws_client.recv())
         if result["type"] != "auth_ok":
             self.logger.warning("Error in authentication")
             raise ValueError("Error in authentication")
@@ -106,7 +108,8 @@ class HassApi(Api):
             self.logger.warning("Unexpected result from Home Assistant, id = %s", self._id)
             self.logger.warning(result)
 
-        # TODO
+        event = result.get('Event', None)
+        self._process_event(event)
 
     async def get_updates(self):
         while True:
