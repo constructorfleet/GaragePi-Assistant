@@ -15,7 +15,7 @@ class GetPositionUseCase(UseCase):
 
     def __call__(self, *args, **kwargs):
         """Determine position from input pins."""
-        for pin, position in self.pin_position_map:
+        for pin, position in self.pin_position_map.items():
             if gpio.input(pin) == self.on_level:
                 return int(position)
         return 0
