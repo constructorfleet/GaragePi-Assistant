@@ -1,8 +1,8 @@
 {
-  "entity_id": "cover.garage_door",
+  "entity_id": "cover.garage_door_test",
   "toggle_garage_pin": 2,
   "invert_relay": true,
-  "interactive": true,
+  "interactive": false,
   "positions": {
     "0": 21,
     "25": 0,
@@ -15,6 +15,6 @@
     "broker_port": "1883",
     "client_id": "test",
     "command_topic": "events/#",
-    "state_topic": "states/slaves/garagepi/cover.test"
+    "state_topic": "states/slaves/garagepi/cover.garage_door_test"
   }
 }
