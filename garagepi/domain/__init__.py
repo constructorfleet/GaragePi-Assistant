@@ -44,5 +44,6 @@ class App:
     def run(self):
         """Run the application"""
         asyncio.get_event_loop().create_task(self.api.get_updates())
-        asyncio.get_event_loop().create_task(self.interactive.run())
+        if self.interactive is not None:
+            asyncio.get_event_loop().create_task(self.interactive.run())
         asyncio.get_event_loop().run_forever()
