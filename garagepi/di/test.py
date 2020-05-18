@@ -79,12 +79,14 @@ def get_application(configuration):
     config = validate_configuration(configuration)
     invert = config[CONF_INVERT_RELAY]
 
-    get_setup_pins_use_case(
-        [config.get(CONF_CLOSE_GARAGE_PIN),
-         config.get(CONF_OPEN_GARAGE_PIN),
-         config.get(CONF_TOGGLE_GARAGE_PIN)] + \
-        config[CONF_POSITIONS].values()
-    )()
+    pins = [config.get(CONF_CLOSE_GARAGE_PIN),
+            config.get(CONF_OPEN_GARAGE_PIN),
+            config.get(CONF_TOGGLE_GARAGE_PIN)]
+
+    for pin in config.get(CONF_POSITIONS, {}).values():
+        pins.append(pin)
+
+    get_setup_pins_use_case(pins)()
 
     if CONF_TOGGLE_GARAGE_PIN in config:
         open_command = close_command = get_command_toggle_use_case(
