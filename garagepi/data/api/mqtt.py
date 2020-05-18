@@ -215,4 +215,12 @@ class MqttApi(Api):
                 self._client.disconnect()
 
     def report_state(self, garage_door):
-        pass
+        self._client.publish(
+            self.config[CONF_STATE_TOPIC],
+            json.dumps({
+                'state': garage_door.state,
+                'attributes': garage_door.attributes
+            }),
+            qos=1,
+            retain=1
+        )

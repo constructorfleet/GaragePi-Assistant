@@ -12,6 +12,6 @@
     "broker_port": "1883",
     "client_id": "test",
     "command_topic": "events/#",
-    "state_topic": "test/states/slaves/cover.garage_door_test"
+    "state_topic": "test/states/slaves/cover.test"
   }
 }
