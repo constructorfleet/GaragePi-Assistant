@@ -69,9 +69,9 @@ def get_handle_position_change_use_case(position_config, set_position):
     )
 
 
-def get_setup_pins_use_case(in_pins):
+def get_setup_pins_use_case(in_pins, out_pins):
     """Get use case for setting up gpio pins."""
-    return SetupPinsUseCase(in_pins=in_pins)
+    return SetupPinsUseCase(in_pins=in_pins, out_pins=out_pins)
 
 
 def get_application(configuration):
@@ -79,14 +79,14 @@ def get_application(configuration):
     config = validate_configuration(configuration)
     invert = config[CONF_INVERT_RELAY]
 
-    pins = [config.get(CONF_CLOSE_GARAGE_PIN),
-            config.get(CONF_OPEN_GARAGE_PIN),
-            config.get(CONF_TOGGLE_GARAGE_PIN)]
+    out_pins = {config.get(CONF_CLOSE_GARAGE_PIN),
+                config.get(CONF_OPEN_GARAGE_PIN),
+                config.get(CONF_TOGGLE_GARAGE_PIN)}
 
-    for pin in config.get(CONF_POSITIONS, {}).values():
-        pins.append(pin)
 
-    get_setup_pins_use_case(pins)()
+    get_setup_pins_use_case(
+        in_pins=config.get(CONF_POSITIONS, {}).values(),
+        out_pins=list(out_pins))()
 
     if CONF_TOGGLE_GARAGE_PIN in config:
         open_command = close_command = get_command_toggle_use_case(
