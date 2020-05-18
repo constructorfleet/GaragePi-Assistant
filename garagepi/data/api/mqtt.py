@@ -8,7 +8,7 @@ import voluptuous as vol
 
 from garagepi.common.const import API_MQTT, CONF_NAME
 from garagepi.common.validation import valid_subscribe_topic, valid_publish_topic, \
-    valid_state_template, constant_value
+    valid_state_template, constant_value, ensure_list
 from garagepi.framework.data.Api import Api
 
 CONF_BROKER_URL = 'broker_url'
@@ -16,7 +16,7 @@ CONF_BROKER_PORT = 'broker_port'
 CONF_CLIENT_ID = 'client_id'
 CONF_USER = 'user'
 CONF_PASSWORD = 'password'
-CONF_COMMAND_TOPIC = 'command_topic'
+CONF_COMMAND_TOPICS = 'command_topics'
 CONF_STATE_TOPIC = 'state_topic'
 CONF_STATE_PAYLOAD_TEMPLATE = 'state_payload_template'
 CONF_TOPIC = 'topic'
@@ -57,7 +57,10 @@ MQTT_CONFIGURATION_SCHEMA = vol.Schema({
     vol.Optional(CONF_CLIENT_ID): str,
     vol.Optional(CONF_USER): str,
     vol.Optional(CONF_PASSWORD): str,
-    vol.Required(CONF_COMMAND_TOPIC): valid_subscribe_topic,
+    vol.Required(CONF_COMMAND_TOPICS): vol.All(
+        ensure_list,
+        [valid_subscribe_topic]
+    ),
     vol.Required(CONF_STATE_TOPIC): valid_publish_topic,
     vol.Optional(CONF_STATE_PAYLOAD_TEMPLATE): valid_state_template,
     vol.Optional(CONF_QOS, default=0): vol.All(
@@ -116,10 +119,11 @@ class MqttApi(Api):
         try:
             error_message = ""
             if rc == 0:  # Successful connection
-                result = self._client.subscribe((self.config[CONF_COMMAND_TOPIC]))
-                if result[0] != 0:
-                    self.logger.error('Unable to subscribe to command topic %s',
-                                      self.config[CONF_COMMAND_TOPIC])
+                for topic in self.config[CONF_COMMAND_TOPICS]:
+                    result = self._client.subscribe(topic)
+                    if result[0] != 0:
+                        self.logger.error('Unable to subscribe to command topic %s',
+                                          topic)
                 self._is_connected = True
 
             elif rc == 1:
