@@ -4,9 +4,9 @@
   "invert_relay": true,
   "interactive": false,
   "positions": {
-    "0": 5,
-    "50": 6,
-    "100": 8
+    "0": 21,
+    "50": 20,
+    "100": 18
   },
   "api": {
     "broker_url": "starscream",
