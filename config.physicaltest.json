@@ -6,7 +6,7 @@
   "positions": {
     "0": 21,
     "50": 20,
-    "100": 18
+    "100": 16
   },
   "api": {
     "broker_url": "starscream",
