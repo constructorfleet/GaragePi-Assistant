@@ -8,16 +8,27 @@ from garagepi.data.rpi import gpio
 class Interactive:
     executor = ThreadPoolExecutor()
 
-    def input_pin(self):
-        print('Enter pin: ')
-        pin = int(input())
-        print('1 or 0? ')
-        value = int(input())
-        gpio.set_input(pin, value)
+    def __init__(self, garage_door, open_cmd, close_cmd):
+        self.garage_door = garage_door
+        self.open_cmd = open_cmd
+        self.close_cmd = close_cmd
+
+    def prompt(self):
+        print('Command:')
+        cmd = str(input())
+        if cmd.lower() == 'open':
+            self.open_cmd(self)
+        elif cmd.lower() == 'close':
+            self.close_cmd(self.garage_door)
+        # print('Enter pin: ')
+        # pin = int(input())
+        # print('1 or 0? ')
+        # value = int(input())
+        # gpio.set_input(pin, value)
 
     async def run(self):
         while True:
-            await asyncio.get_event_loop().run_in_executor(self.executor, self.input_pin)
+            await asyncio.get_event_loop().run_in_executor(self.executor, self.prompt)
             await asyncio.sleep(1)
 
 
@@ -39,7 +50,7 @@ class App:
         self.close_command = close_command
         self.on_position_change = on_position_change
         self.api = api
-        self.interactive = Interactive() if interactive else None
+        self.interactive = Interactive(garage_door, open_command, close_command) if interactive else None
 
     def run(self):
         """Run the application"""

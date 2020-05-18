@@ -2,7 +2,7 @@
   "entity_id": "cover.test",
   "toggle_garage_pin": 2,
   "invert_relay": true,
-  "interactive": false,
+  "interactive": true,
   "positions": {
     "0": 21,
     "50": 20,
