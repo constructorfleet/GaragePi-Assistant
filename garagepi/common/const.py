@@ -10,6 +10,7 @@ CONF_POSITIONS = 'positions'
 CONF_PIN = 'pin'
 CONF_ENTITY_ID = 'entity_id'
 CONF_NAME = 'name'
+CONF_INTERACTIVE = 'interactive'
 
 API_MQTT = 'mqtt'
 API_HASS = 'hass'

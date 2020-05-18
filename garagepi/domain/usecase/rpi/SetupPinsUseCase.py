@@ -20,17 +20,20 @@ class SetupPinsUseCase(UseCase):
         for pin in self.out_pins:
             if pin is None:
                 continue
+            self.logger.warning('Seting up %s as in %s', str(pin), 'out')
             gpio.setup(pin, gpio.OUT)
         for pin in self.in_pins:
             if pin is None:
                 continue
+            self.logger.warning('Seting up %s as in %s', str(pin), 'in')
             gpio.setup(pin, gpio.IN, pull_up_down=gpio.PUD_OFF)
         for pin in self.in_down_pins:
             if pin is None:
                 continue
-            self.logger.warning('Seting up %s as in %s', str(pin), type(pin))
+            self.logger.warning('Seting up %s as in %s', str(pin), 'in down')
             gpio.setup(pin, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         for pin in self.in_up_pins:
             if pin is None:
                 continue
+            self.logger.warning('Seting up %s as in %s', str(pin), 'in up')
             gpio.setup(pin, gpio.IN, pull_up_down=gpio.PUD_UP)

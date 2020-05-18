@@ -74,7 +74,7 @@ def get_setup_pins_use_case(control_pins, position_pins):
     return SetupPinsUseCase(out_pins=position_pins, in_down_pins=control_pins)
 
 
-def get_application(configuration, interactive=False):
+def get_application(configuration):
     """Get the application for the given configuration."""
     config = validate_configuration(configuration)
     invert = config[CONF_INVERT_RELAY]
@@ -116,5 +116,5 @@ def get_application(configuration, interactive=False):
             )
         )(),
         api=api,
-        interactive=interactive
+        interactive=config.get(CONF_INTERACTIVE, False)
     )

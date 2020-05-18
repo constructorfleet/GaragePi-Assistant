@@ -8,6 +8,7 @@ class SetGarageDoorPositionUseCase(UseCase):
 
     def __init__(self, garage_door, notify_state):
         """Initialize use case for setting garage door position."""
+        super().__init__()
         self.garage_door = garage_door
         self.notify_state = notify_state
 
