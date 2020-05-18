@@ -71,7 +71,7 @@ def get_handle_position_change_use_case(position_config, set_position):
 
 def get_setup_pins_use_case(control_pins, position_pins):
     """Get use case for setting up gpio pins."""
-    return SetupPinsUseCase(in_up_pins=position_pins, out_pins=control_pins)
+    return SetupPinsUseCase(in_up_pins=control_pins, out_pins=position_pins)
 
 
 def get_application(configuration):
