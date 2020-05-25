@@ -13,5 +13,5 @@ class NotifyStateUseCase(UseCase):
 
     def __call__(self, garage_door):
         """Invoke data method to report state."""
-        self.logger.info('Reporting')
+        self.logger.warning('Reporting %s', str(garage_door))
         self.api.report_state(garage_door)

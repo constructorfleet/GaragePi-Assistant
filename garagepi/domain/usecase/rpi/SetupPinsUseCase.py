@@ -16,25 +16,25 @@ class SetupPinsUseCase(UseCase):
         self.in_up_pins = in_up_pins or []
 
     def __call__(self, *args, **kwargs):
-        self.logger.info("Setting up pins")
+        self.logger.warning("Setting up pins")
         gpio.setmode(gpio.BCM)
         for pin in self.out_pins:
             if pin is None:
                 continue
-            self.logger.warning('Seting up %s as in %s', str(pin), 'out')
+            self.logger.warning('Setting up %s as in %s', str(pin), 'out')
             gpio.setup(pin, gpio.OUT)
         for pin in self.in_pins:
             if pin is None:
                 continue
-            self.logger.warning('Seting up %s as in %s', str(pin), 'in')
+            self.logger.warning('Setting up %s as in %s', str(pin), 'in')
             gpio.setup(pin, gpio.IN, pull_up_down=gpio.PUD_OFF)
         for pin in self.in_down_pins:
             if pin is None:
                 continue
-            self.logger.warning('Seting up %s as in %s', str(pin), 'in down')
+            self.logger.warning('Setting up %s as in %s', str(pin), 'in down')
             gpio.setup(pin, gpio.IN, pull_up_down=gpio.PUD_DOWN)
         for pin in self.in_up_pins:
             if pin is None:
                 continue
-            self.logger.warning('Seting up %s as in %s', str(pin), 'in up')
+            self.logger.warning('Setting up %s as in %s', str(pin), 'in up')
             gpio.setup(pin, gpio.IN, pull_up_down=gpio.PUD_UP)

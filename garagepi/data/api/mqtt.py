@@ -97,7 +97,7 @@ class MqttApi(Api):
     def _start(self):
         try:
             if self._first_connection:
-                self.logger.info('Config %s', str(self.config))
+                self.logger.warning('Config %s', str(self.config))
                 if CONF_USER in self.config and CONF_PAYLOAD in self.config:
                     self._client.username_pw_set(self.config[CONF_USER],
                                                  self.config[CONF_PASSWORD])
@@ -159,7 +159,7 @@ class MqttApi(Api):
 
     def _on_message(self, client, userdata, msg):
         try:
-            self.logger.info("Message Received: Topic = %s, Payload = %s", msg.topic, msg.payload.decode())
+            self.logger.warning("Message Received: Topic = %s, Payload = %s", msg.topic, msg.payload.decode())
             try:
                 payload_dict = json.loads(msg.payload.decode())
             except TypeError:
@@ -168,7 +168,7 @@ class MqttApi(Api):
 
             self._process_event(payload_dict)
         except UnicodeDecodeError:
-            self.logger.info("Unable to decode MQTT message")
+            self.logger.warning("Unable to decode MQTT message")
             self.logger.debug('Unable to decode MQTT message, with Traceback: %s',
                               traceback.format_exc())
         except Exception as e:
@@ -182,7 +182,7 @@ class MqttApi(Api):
         # noinspection PyBroadException
         try:
             if rc == 0:
-                self.logger.info("Disconnected successfully")
+                self.logger.warning("Disconnected successfully")
                 return
 
             self._is_connected = False

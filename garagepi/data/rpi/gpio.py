@@ -65,7 +65,7 @@ except (RuntimeError, ModuleNotFoundError):
                 return
             if pin.value != value:
                 pin.value = value
-                _LOGGER.info('Notifying')
+                _LOGGER.warning('Notifying')
                 self._out_pins[channel].value = value
                 self.wait_for_edge(channel, value)
             else:

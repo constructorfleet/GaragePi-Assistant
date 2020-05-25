@@ -8,9 +8,9 @@ class CommandCloseUseCase(CommandUseCase):
 
     def __call__(self):
         if self.garage_door.is_closed:
-            self.logger.info('Garage is already closed')
+            self.logger.warning('Garage is already closed')
             return False
         else:
-            self.logger.info('Closing')
+            self.logger.warning('Closing')
             self.write_pin()
             return True

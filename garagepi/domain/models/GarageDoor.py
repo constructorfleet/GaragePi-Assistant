@@ -1,3 +1,4 @@
+import json
 import logging
 from enum import Enum
 
@@ -68,3 +69,12 @@ class GarageDoor:
         self._prev_position = self._position
         self._position = position
         self.in_motion = self._position != self._prev_position
+
+    def __str__(self):
+        return json.dumps({
+                'state': self.state,
+                'attributes': self.attributes
+            })
+
+    def __repr__(self):
+        return self.__str__()
