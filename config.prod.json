@@ -13,7 +13,7 @@
     "broker_url": "starscream",
     "broker_port": "1883",
     "client_id": "garage_pi",
-    "command_topic": "events/#",
+    "command_topics": ["events/#"],
     "state_topic": "states/slaves/garagepi/cover.garage_door"
   }
 }
