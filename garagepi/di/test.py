@@ -91,7 +91,6 @@ def get_application(configuration):
         config[CONF_ENTITY_ID])(
         get_position_use_case(config[CONF_POSITIONS])
     )
-    api = get_build_api_use_case(config[CONF_API])()
 
     if CONF_TOGGLE_GARAGE_PIN in config:
         open_command = close_command = get_command_toggle_use_case(
@@ -109,6 +108,12 @@ def get_application(configuration):
             garage_door,
             invert
         )
+
+    api = get_build_api_use_case(config[CONF_API])(
+        garage_door,
+        open_command,
+        close_command
+    )
 
     return App(
         garage_door=garage_door,
