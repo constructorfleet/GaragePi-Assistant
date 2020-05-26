@@ -10,4 +10,4 @@ RUN apt update && \
     libffi-dev
 RUN pip3 install -r requirements.txt
 
-CMD ["python3", "-m", "garagepi", "-c", "/config.json"]
+CMD ["python3", "garagepi", "-c", "/config.json"]
