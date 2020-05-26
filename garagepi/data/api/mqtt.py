@@ -9,6 +9,7 @@ import voluptuous as vol
 from garagepi.common.const import API_MQTT, CONF_NAME
 from garagepi.common.validation import valid_subscribe_topic, valid_publish_topic, \
     valid_state_template, constant_value, ensure_list
+from garagepi.domain.models.StateChangedEvent import StateChangedEvent
 from garagepi.framework.data.Api import Api
 
 CONF_BROKER_URL = 'broker_url'
@@ -159,7 +160,8 @@ class MqttApi(Api):
 
     def _on_message(self, client, userdata, msg):
         try:
-            self.logger.warning("Message Received: Topic = %s, Payload = %s", msg.topic, msg.payload.decode())
+            self.logger.warning("Message Received: Topic = %s, Payload = %s", msg.topic,
+                                msg.payload.decode())
             try:
                 payload_dict = json.loads(msg.payload.decode())
             except TypeError:
@@ -222,12 +224,17 @@ class MqttApi(Api):
                 self._client.disconnect()
 
     def report_state(self, garage_door):
+        new_state = str(garage_door)
+        payload = StateChangedEvent(
+            garage_door.entity_id,
+            new_state,
+            self._previous_state
+        )
+
+        self._previous_state = new_state
         self._client.publish(
             self.config[CONF_STATE_TOPIC],
-            json.dumps({
-                'state': garage_door.state,
-                'attributes': garage_door.attributes
-            }),
+            json.dumps(payload),
             qos=1,
             retain=1
         )

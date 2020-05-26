@@ -11,6 +11,7 @@ import websocket
 from garagepi.common.async_utils import create_task
 from garagepi.common.const import CONF_NAME, API_HASS
 from garagepi.common.validation import entity_id, constant_value
+from garagepi.domain.models.StateChangedEvent import StateChangedEvent
 from garagepi.framework.data.Api import Api
 
 CONF_CERT_VERIFY = 'cert_verify'
@@ -47,8 +48,20 @@ class HassApi(Api):
     def _initialize(self):
         create_task(self.get_updates())
 
-    def report_state(self, garage_door):
-        pass
+    async def report_state(self, garage_door):
+        new_state = str(garage_door)
+        payload = StateChangedEvent(
+            garage_door.entity_id,
+            new_state,
+            self._previous_state
+        )
+
+        self._previous_state = new_state
+        await asyncio.get_event_loop().run_in_executor(
+            self._executor,
+            self._ws_client.send,
+            payload
+        )
 
     async def _connect(self):
         self._token = self.config.get(CONF_TOKEN, None)

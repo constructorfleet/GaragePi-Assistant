@@ -14,6 +14,7 @@ class Api(abc.ABC):
     _is_connected = False
     _open_command = None
     _close_command = None
+    _previous_state = None
 
     def __init__(self, configuration, open_command, close_command):
         """Initialize the remote data interface."""
@@ -61,7 +62,7 @@ class Api(abc.ABC):
                 )
             )
 
-    def report_state(self, garage_door):
+    async def report_state(self, garage_door):
         """Report the state of the garage door to the remote data interface."""
         raise NotImplementedError()
 
