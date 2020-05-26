@@ -4,16 +4,6 @@ import traceback
 
 import configargparse
 
-from garagepi import GaragePiAssistant
-from garagepi.common.configuration import validate_configuration
-from garagepi.common.const import (
-    CONF_API,
-    CONF_NAME,
-    API_MQTT,
-    API_HASS
-)
-from garagepi.data.api.hass import HassApi
-from garagepi.data.api.mqtt import MqttApi
 from garagepi.di.test import get_application
 
 _LOGGER = logging.getLogger(__name__)
