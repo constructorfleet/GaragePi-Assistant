@@ -14,7 +14,7 @@ class BuildApiUseCase(UseCase):
 
     def __call__(self, garage_door, open_command, close_command):
         if self.config.get(CONF_NAME, API_NULL):
-            return NullApi(self.config)
+            return NullApi(self.config, open_command, close_command)
         if self.config[CONF_NAME] == API_HASS:
             return HassApi(self.config, open_command, close_command)
         elif self.config[CONF_NAME] == API_MQTT:
