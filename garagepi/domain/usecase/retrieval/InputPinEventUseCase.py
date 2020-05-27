@@ -1,3 +1,4 @@
+from garagepi.data.rpi import gpio
 from garagepi.framework.usecase.InputPinEventUseCase import InputPinEventUseCase
 
 
@@ -13,6 +14,8 @@ class HandlePositionChangeUseCase(InputPinEventUseCase):
 
     def on_event(self, pin, value):
         self.logger.warning('Pin %s, value %s', str(pin), str(value))
+        if value == gpio.LOW:
+            return
         self.logger.warning(str(self.pin_position_map))
         position = self.pin_position_map.get(pin, None)
         if position is None:
