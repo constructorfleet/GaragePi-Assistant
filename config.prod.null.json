@@ -1,0 +1,15 @@
+{
+  "entity_id": "cover.garage_door",
+  "toggle_garage_pin": 2,
+  "invert_relay": true,
+  "interactive": false,
+  "positions": {
+    "0": 6,
+    "33": 13,
+    "67": 19,
+    "100": 26
+  },
+  "api": {
+    "name": "NullApi"
+  }
+}
