@@ -13,5 +13,7 @@ class SetGarageDoorPositionUseCase(UseCase):
         self.notify_state = notify_state
 
     def __call__(self, position):
+        if self.garage_door.position == position:
+            return
         self.garage_door.set_position(position)
         self.notify_state(self.garage_door)
