@@ -12,6 +12,7 @@ CONF_ENTITY_ID = 'entity_id'
 CONF_NAME = 'name'
 CONF_INTERACTIVE = 'interactive'
 
+API_NULL = 'null'
 API_MQTT = 'mqtt'
 API_HASS = 'hass'
 
