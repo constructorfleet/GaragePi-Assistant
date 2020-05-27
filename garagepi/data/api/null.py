@@ -12,6 +12,9 @@ NULL_CONFIGURATION_SCHEMA = vol.Schema({
 class NullApi(Api):
     """Null API adapter."""
 
+    def __init__(self, configuration, open_command, close_command):
+        super().__init__(configuration, open_command, close_command)
+
     def _initialize(self):
         self.logger.warning('Initializing API')
 
