@@ -57,7 +57,7 @@ def get_position_use_case(position_config):
     """Get use case for retrieving current position."""
     return GetPositionUseCase(
         {value: key for key, value in position_config.items()},
-        gpio.HIGH
+        gpio.LOW
     )
 
 
