@@ -16,6 +16,7 @@ from garagepi.common.validation import (
 )
 from garagepi.data.api.hass import HASS_CONFIGURATION_SCHEMA
 from garagepi.data.api.mqtt import MQTT_CONFIGURATION_SCHEMA
+from garagepi.data.api.null import NULL_CONFIGURATION_SCHEMA
 
 
 def validate_configuration(configuration):
@@ -26,7 +27,8 @@ def validate_configuration(configuration):
     config = vol.Schema({
         vol.Required(CONF_API): vol.Or(
             MQTT_CONFIGURATION_SCHEMA,
-            HASS_CONFIGURATION_SCHEMA
+            HASS_CONFIGURATION_SCHEMA,
+            NULL_CONFIGURATION_SCHEMA
         ),
         vol.Inclusive(CONF_OPEN_GARAGE_PIN, 'control'): valid_gpio_pin,
         vol.Inclusive(CONF_CLOSE_GARAGE_PIN, 'control'): valid_gpio_pin,

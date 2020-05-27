@@ -1,4 +1,12 @@
+import voluptuous as vol
+
+from garagepi import CONF_NAME, API_NULL
+from garagepi.common.validation import constant_value
 from garagepi.framework.data.Api import Api
+
+NULL_CONFIGURATION_SCHEMA = vol.Schema({
+    vol.Optional(CONF_NAME, default=API_NULL): constant_value(API_NULL)
+})
 
 
 class NullApi(Api):

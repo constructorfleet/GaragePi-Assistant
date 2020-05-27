@@ -26,7 +26,7 @@ HASS_CONFIGURATION_SCHEMA = vol.Schema({
     vol.Optional(CONF_TOKEN, default=None): str,
     vol.Optional(CONF_FRIENDLY_NAME): str,
     vol.Optional(CONF_CERT_VERIFY, default=True): vol.Coerce(bool),
-    vol.Optional(CONF_NAME, default=API_HASS): constant_value(API_HASS)
+    vol.Required(CONF_NAME): constant_value(API_HASS)
 })
 
 

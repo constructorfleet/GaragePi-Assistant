@@ -71,7 +71,7 @@ MQTT_CONFIGURATION_SCHEMA = vol.Schema({
     vol.Optional(CONF_RETAIN, default=False): vol.Coerce(bool),
     vol.Optional(CONF_LAST_WILL): BIRTH_WILL_SCHEMA,
     vol.Optional(CONF_BIRTH): BIRTH_WILL_SCHEMA,
-    vol.Optional(CONF_NAME, default=API_MQTT): constant_value(API_MQTT)
+    vol.Required(CONF_NAME): constant_value(API_MQTT)
 })
 
 
